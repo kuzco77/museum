@@ -5,3 +5,4 @@ config/roles.json
 public/uploads
 app/service.js
 *.log
+*.DS_Store
