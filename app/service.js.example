@@ -27,11 +27,12 @@ app.factory('AuthService', ['$http','$route', 'cfpLoadingBar', function($http, $
 					'quocGia', 'tinh', 
 					'huyen', 'xa', 'thon', 
 					'coQuanToChucPhanTich', 
-					'coQuanXuLy'
-					,'boPhanLayMauDNA', 
+					'coQuanXuLy',
+					'boPhanLayMauDNA', 
 					'trangThaiGiuMauDNA',
 					'coQuanNhapVatMau',
-					'giaTriSuDung']
+					'giaTriSuDung',
+					'hinhThucNhapMau']
 	});
 
 	function exportFile(id){

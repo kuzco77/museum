@@ -302,7 +302,7 @@
 				</tr>
 				<tr>
 					<td><input type="text" title="{{tooltips[39]}}" name="phanTichQuangHocStr" ng-model="data.phanTichQuangHocStr" class="input-form"></td>
-					<td><input type="file" multiple accept="video/mp4,video/x-m4v,video/*" name ="phanTichQuangHocFile" ng-model="data.phanTichQuangHocFile" class="input-form"></td>
+					<td><input type="file" multiple accept=".doc, .docx, .pdf" name ="phanTichQuangHocFile" ng-model="data.phanTichQuangHocFile" class="input-form"></td>
 				</tr>
 				<tr>
 					<td><label>34. Các kết quả phân tích thành phần vật chất:</label></td>
@@ -496,12 +496,7 @@
 				<tr>
 					<td><label>61. Hình thức nhập mẫu:</label></td>
 					<td>
-						<select class="select-box" ng-init="" title="{{tooltips[72]}}" name="hinhThucNhapMau" ng-model="data.hinhThucNhapMau">
-							<option value=""></option>
-							<option value="Thu thập">Thu thập</option>
-							<option value="Hiến tặng">Hiến Tặng</option>
-							<option value="Khác">Khác</option>
-						</select>
+						<input type="text" list="hinhThucNhapMau" class="select-box" ng-model="data.hinhThucNhapMau" title="{{tooltips['hinhThucNhapMau']}}" name="hinhThucNhapMau">
 					</td>
 				</tr>
 
