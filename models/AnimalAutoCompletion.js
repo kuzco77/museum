@@ -1,5 +1,8 @@
 module.exports = function (mongoose) {
 	var schemaPrototype = {
+		tenVietNam: [String],
+		tenDiaPhuong: [String],
+		tenTiengAnh: [String],
 		tenTheoBaoTang: [String],
 		tenDongNghia: [String],
 		gioi: [String],
@@ -13,6 +16,7 @@ module.exports = function (mongoose) {
 		phanHo: [String],
 		toc: [String],
 		giong: [String],
+		phanGiong: [String],
 		loai: [String],
 		duoiLoai: [String],
 		coQuanThuMau: [String],
@@ -28,7 +32,7 @@ module.exports = function (mongoose) {
 		trangThaiGiuMauDNA: [String],
 		coQuanNhapVatMau: [String],
 		giaTriSuDung: [String],
-		hinhThucNhapMau: [String],
+		// hinhThucNhapMau: [String],
 		noiLuuTruMau: [String]
 		// will update after 12 / 12 / 2016
 		// boPhanLayMauDNA: [String],

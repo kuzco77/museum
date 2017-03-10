@@ -3,6 +3,18 @@ module.exports = function (mongoose) {
 		created_at: Date,
 		updated_at: Date,
 		deleted_at: Date,
+		created_by: {
+			userId: String,
+			userFullName: String
+		},
+		updated_by: { // Only save the last update
+			userId: String,
+			userFullName: String
+		},
+		deleted_by: {
+			userId: String,
+			userFullName: String
+		},
 		soHieu: {
 			soHieuBTTNVN: String,
 			soHieuBaoTangCS: String,
@@ -88,6 +100,7 @@ module.exports = function (mongoose) {
 			xuLyCheTac: {
 				hinhAnhDinhKem: [String],
 				dinhKemXuLyCheTac: [String],
+				thuocTinhXuLyCheTac: String,
 				phuongThucXuLy: String,
 				thoiGianXuLy: Date,
 				nguoiXuLy: String,
@@ -100,7 +113,6 @@ module.exports = function (mongoose) {
 			loaiMau : String,
 			hinhDangMauTonTai : String,
 			mauSac : String,
-			phanLoaiSuDung : String,
 			thanhPhanKhoangVat : String,
 			tinhChatVatLy : String,
 			congThucHoaHoc : [String],

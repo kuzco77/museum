@@ -80,6 +80,7 @@ app.controller('AnimalFormCtrl', ['$scope','$http','AuthService','cfpLoadingBar'
 	$scope.addPost = function(FormContent){
 		console.log($scope.data)
 		// if ($scope.FormContent.$valid) {
+			AuthService.startSpinner();
 			cfpLoadingBar.start();
 			var fd = new FormData(document.getElementById('form-content'));
 			AuthService.addSample(fd, AuthService.hostName + '/content/dong-vat', urlRe);
@@ -131,11 +132,6 @@ app.controller('VegetableFormCtrl', ['$scope','$http','AuthService','cfpLoadingB
 	// DatePicker
 	AuthService.initDatePicker(null, null);
 
-	// function autoCom(str) {
-	// 	jQuery("#"+str).autocomplete({
-	// 		source : $scope.auto[str]
-	// 	})
-	// };
 	var arrAuto = AuthService.arrAuto;
 	$http.get(AuthService.hostName + '/content/thuc-vat/auto').then(function(res) {
 		$scope.auto = res.data;
@@ -150,6 +146,9 @@ app.controller('VegetableFormCtrl', ['$scope','$http','AuthService','cfpLoadingB
 
 	$scope.addPost = function(FormContent){
 		// if ($scope.FormContent.$valid) {
+			AuthService.startSpinner();
+			cfpLoadingBar.start();
+
 			var fd = new FormData(document.getElementById('form-content'));
 			AuthService.addSample(fd, AuthService.hostName + '/content/thuc-vat', urlRe);
 		// } else{
@@ -159,9 +158,11 @@ app.controller('VegetableFormCtrl', ['$scope','$http','AuthService','cfpLoadingB
 
 	$scope.latChange = function () {
 		$scope.data.viDo = $scope.vido_do + " ° " + $scope.vido_phut + " ' " + $scope.vido_giay + '"';
+		console.log($scope.data.viDo)
 	}
 	$scope.lonChange = function () {
 		$scope.data.kinhDo = $scope.kinhdo_do + " ° " + $scope.kinhdo_phut + " ' " + $scope.kinhdo_giay + '"';
+		console.log($scope.data.kinhDo)
 	}
 
 	$scope.dms = function () {
@@ -203,11 +204,6 @@ app.controller('GeologicalFormCtrl', ['$scope','$http','AuthService','cfpLoading
 	// DatePicker
 	AuthService.initDatePicker(null, null);
 
-	// function autoCom(str) {
-	// 	jQuery("#"+str).autocomplete({
-	// 		source : $scope.auto[str]
-	// 	})
-	// };
 	var arrAuto = AuthService.arrAuto;
 	$http.get(AuthService.hostName + '/content/dia-chat/auto').then(function(res) {
 		$scope.auto = res.data;
@@ -221,6 +217,8 @@ app.controller('GeologicalFormCtrl', ['$scope','$http','AuthService','cfpLoading
 	var urlRe = AuthService.hostName + '/app/#!/bai-dang/dia-chat';
 	$scope.addPost = function(FormContent){
 		// if ($scope.FormContent.$valid) {
+			AuthService.startSpinner();
+			cfpLoadingBar.start();
 			var fd = new FormData(document.getElementById('form-content'));
 			AuthService.addSample(fd, AuthService.hostName + '/content/dia-chat', urlRe);
 		// } else{
@@ -274,11 +272,6 @@ app.controller('LandFormCtrl', ['$scope','$http','AuthService','cfpLoadingBar', 
 	// DatePicker
 	AuthService.initDatePicker(null, null);
 
-	// function autoCom(str) {
-	// 	jQuery("#"+str).autocomplete({
-	// 		source : $scope.auto[str]
-	// 	})
-	// };
 	var arrAuto = AuthService.arrAuto;
 	$http.get(AuthService.hostName + '/content/tho-nhuong/auto').then(function(res) {
 		$scope.auto = res.data;
@@ -292,6 +285,8 @@ app.controller('LandFormCtrl', ['$scope','$http','AuthService','cfpLoadingBar', 
 	var urlRe = AuthService.hostName + '/app/#!/bai-dang/tho-nhuong';
 	$scope.addPost = function(FormContent){
 		// if ($scope.FormContent.$valid) {
+			AuthService.startSpinner();
+			cfpLoadingBar.start();
 			var fd = new FormData(document.getElementById('form-content'));
 			AuthService.addSample(fd, AuthService.hostName + '/content/tho-nhuong', urlRe);
 		// } else{
@@ -345,11 +340,6 @@ app.controller('PaleontologicalFormCtrl', ['$scope','$http','AuthService','cfpLo
 	// DatePicker
 	AuthService.initDatePicker(null, null);
 
-	// function autoCom(str) {
-	// 	jQuery("#"+str).autocomplete({
-	// 		source : $scope.auto[str]
-	// 	})
-	// };
 	var arrAuto = AuthService.arrAuto;
 	$http.get(AuthService.hostName + '/content/co-sinh/auto').then(function(res) {
 		$scope.auto = res.data;
@@ -363,6 +353,8 @@ app.controller('PaleontologicalFormCtrl', ['$scope','$http','AuthService','cfpLo
 	var urlRe = AuthService.hostName + '/app/#!/bai-dang/co-sinh';
 	$scope.addPost = function(FormContent){
 		// if ($scope.FormContent.$valid) {
+			AuthService.startSpinner();
+			cfpLoadingBar.start();
 			var fd = new FormData(document.getElementById('form-content'));
 			AuthService.addSample(fd, AuthService.hostName + '/content/co-sinh', urlRe);
 		// } else{

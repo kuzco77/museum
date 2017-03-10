@@ -1,15 +1,22 @@
 module.exports = function (mongoose) {
 	var schemaPrototype = {
-		tenKhoaHoc: [String],
 		tenDongNghia: [String],
 		gioi: [String],
 		nganh: [String],
 		lop: [String],
+		phanLop: [String],
 		bo: [String],
 		ho: [String],
+		lienHo: [String],
+		phanHo: [String],
 		chi: [String],
+		chiGiong: [String],
 		loai: [String],
 		duoiLoai: [String],
+		tenVietNam: [String],
+		tenDiaPhuong: [String],
+		tenTiengAnh: [String],
+		tenTheoBaoTang: [String],
 		coQuanThuMau: [String],
 		quocGia: [String],
 		tinh: [String],
@@ -19,8 +26,9 @@ module.exports = function (mongoose) {
 		coQuanToChucPhanTich: [String],
 		vungGenPhanTich: [String],
 		coQuanNhapVatMau: [String],
+		coQuanXuLy: [String],
 		giaTriSuDung: [String],
-		hinhThucNhapMau: [String],
+		// hinhThucNhapMau: [String],
 		noiLuuTruMau: [String]
 	};
 	var paleontologicalAutoCompletion = mongoose.Schema(schemaPrototype);

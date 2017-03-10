@@ -1,5 +1,10 @@
 module.exports = function (mongoose) {
 	var schemaPrototype = {
+		tenTheoQuocTe: [String],
+		tenVietNam: [String],
+		tenDiaPhuong: [String],
+		tenTiengAnh: [String],
+		tenTheoBaoTang: [String],
 		coQuanThuMau: [String],
 		quocGia: [String],
 		tinh: [String],
@@ -11,8 +16,8 @@ module.exports = function (mongoose) {
 		coQuanNhapVatMau: [String],
 		giaTriSuDung: [String],
 		// Update after 12 / 12 / 2016
-		noiLuuTruMau: [String],
-		hinhThucNhapMau: [String]
+		// hinhThucNhapMau: [String],
+		noiLuuTruMau: [String]
 	};
 	var soilAutoCompletion = mongoose.Schema(schemaPrototype);
 

@@ -13,8 +13,13 @@ module.exports = function (mongoose) {
 		tong: [String],
 		tong: [String],
 		chi: [String],
+		phanChi: [String],
 		loai: [String],
 		duoiLoai: [String],
+		tenVietNam: [String],
+		tenDiaPhuong: [String],
+		tenTiengAnh: [String],
+		tenTheoBaoTang: [String],
 		coQuanThuMau: [String],
 		quocGia: [String],
 		tinh: [String],
@@ -27,7 +32,7 @@ module.exports = function (mongoose) {
 		mauDNA: [String],
 		coQuanNhapVatMau: [String],
 		giaTriSuDung: [String],
-		hinhThucNhapMau: [String],
+		// hinhThucNhapMau: [String],
 		noiLuuTruMau: [String]
 	};
 	var vegetableAutoCompletion = mongoose.Schema(schemaPrototype);
