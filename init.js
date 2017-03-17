@@ -1479,17 +1479,19 @@ function exportFile (objectInstance, PROP_FIELDS, ObjectModel, LABEL, res, parag
 				console.log('pdf');
 				outputFileName += '.pdf';
 				var exec = require('child_process').exec;
-				var cmd = 'libreoffice5.3 --invisible --convert-to pdf ' + tmpFileName;
+				var cmd = 'cd ' + __dirname + ' && libreoffice5.3 --invisible --convert-to pdf ' + tmpFileName;
+				console.log('starting: ' + cmd);
+				console.log(objectInstance.id);
 				exec(cmd, function (err, stdout, stderr) {
 					if (err){
 						console.log(err);
 						return res.end('err');
 					}
-					// console.log('---')
-					// console.log(stdout);
-					// console.log('---')
-					// console.log(stderr);
-					// console.log('---')
+					console.log('--out-')
+					console.log(stdout);
+					console.log('--err-')
+					console.log(stderr);
+					console.log('--end-')
 					pdfFileName = tmpFileName.substring(0, tmpFileName.length - 'docx'.length) + 'pdf';
 					// console.log(pdfFileName);
 					// console.log(outputFileName);
@@ -1915,7 +1917,7 @@ function exportXLSX (objectInstance, PROP_FIELDS, ObjectModel, LABEL, res, parag
 
 		var excelbuilder = require('msexcel-builder');
 		var tmpFileName = (new Date()).getTime() + '.tmp.xlsx';
-		var workbook = excelbuilder.createWorkbook('.', tmpFileName);
+		var workbook = excelbuilder.createWorkbook(path.join(__dirname), tmpFileName);
 		var _NUM_ROW = 200;
 		var _NUM_COL = 4;
 		var sheet = workbook.createSheet('PCSDL', _NUM_COL, _NUM_ROW);
