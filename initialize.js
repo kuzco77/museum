@@ -3,8 +3,8 @@ var path = require('path')
 
 var cleanUser = false;
 var cleanConfigFiles = false;
-var cleanAutoCompletion = true;
-var cleanData = true;
+var cleanAutoCompletion = false;
+var cleanData = false;
 var fixMaDeTai = true;
 
 var mongoose = require('mongoose');

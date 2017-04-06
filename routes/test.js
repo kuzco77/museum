@@ -360,4 +360,13 @@ router.get('/json', function (req, res, next) {
 // 	})
 // })
 
+router.get("/hello", function(req, res){
+	// res.send("hello 1");
+	// res.send("bye 2");
+	// res.write("alkhsd;kfjalskdjhflkasjdhflkjashldkfjh");
+	// res.write("Cai quai gi do noi tiep duoc");
+	// res.end();
+	res.render()
+});
+
 module.exports = router;

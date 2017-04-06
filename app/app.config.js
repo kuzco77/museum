@@ -68,5 +68,9 @@ app.config(['$locationProvider', '$routeProvider',function($locationProvider, $r
 	.when('/bai-dang/test-over', {
 		templateUrl: 'views/testover.template.html'
 	})
+	.when('/guest/test', {
+		templateUrl: 'views/guest/view-paltemplate.html'
+		controller: 'FormTestController'
+	}
 	.otherwise({ redirectTo: '/co-sinh' })
 }]);

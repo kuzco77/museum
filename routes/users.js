@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var path = require('path');
+var users = require('mongoose').
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -34,6 +35,10 @@ router.get('/roles', isLoggedIn, function (req, res, next) {
 			error: 'Invalid user id'
 		})
 	}
+})
+
+router.get('/edit-info', isLoggedIn, function(req, res, next) {
+	var roles = JSON.parse
 })
 
 function isLoggedIn (req, res, next) {
