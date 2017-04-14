@@ -2,7 +2,14 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var path = require('path');
+<<<<<<< HEAD
 var users = require('mongoose')	
+=======
+var mongoose = require('mongoose');
+var multer               = require('multer');
+var UPLOAD_DESTINATION   = 'public/uploads/user/avatar';
+var upload               = multer({dest: UPLOAD_DESTINATION});
+>>>>>>> 87085feb920dd354dcdcd47a1ee9e423d9f363fa
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -12,61 +19,178 @@ var PROMISES = global.myCustomVars.promises;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  return res.redirect('me');
+  res.redirect('/users/me');
 });
 
 router.get('/me', isLoggedIn, function (req, res, next) {
-	var roles = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/roles.json')).toString());
-	var cores = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/acl-core.json')).toString())
-	var aclRules = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/acl.json')).toString());
-	if (aclRules.hasOwnProperty(req.user.id)){
-		var data = aclRules[req.user.id];
-		sides = [];
-		for(var i = 0; i < data.roles.length; i++){
-			var allows = roles[data.roles[i]].allows;
-			for(var j = 0; j < allows.length; j++){
-				if (allows[j].hasOwnProperty('actions') && allows[j].hasOwnProperty('resourceId') && (sides.indexOf(allows[j].resourceId) < 0)){
-					sides.push(allows[j].resourceId)
+	if (!req.query.hasOwnProperty('datatype') || (req.query.datatype != 'json')){
+		// render
+		return async(() => {
+			let user = await(PROMISES.getUser(req.session.userId));
+			user = JSON.parse(JSON.stringify(user.userNormal));
+			delete user.password;
+			delete user.forgot_password;
+			user.statistic = {}
+			let models = [
+				{
+					modelName: 'Paleontological',
+					title: 'Cổ sinh'
+				},
+				{
+					modelName: 'Geological',
+					title: 'Địa chất'
+				},
+				{
+					modelName: 'Animal',
+					title: 'Động vật'
+				},
+				{
+					modelName: 'Soil',
+					title: 'Thổ nhưỡng'
+				},
+				{
+					modelName: 'Vegetable',
+					title: 'Thực vật'
 				}
+			]
+			user.statistic = []
+			for(let model of models){
+				user.statistic.push({
+					title: model.title,
+					number: await(new Promise((resolve, reject) => {
+						mongoose.model(model.modelName).find({'created_by.userId': {$eq: user.id}, deleted_at: {$eq: null}}, (err, rows) => {
+							if (err){
+								console.log(err);
+								resolve(0)
+							}
+							else {
+								// console.log(rows.length);
+								resolve(rows.length)
+							}
+							
+						})
+					}))
+				});
 			}
-		}
-		let user = JSON.parse(JSON.stringify(req.user));
+			// console.log(user);
+			let msg = '';
+			try {
+				msg = req.flash('user-msg')
+			}
+			catch (e){
+				console.log(e);
+			}
+			return res.render('profile', {
+				user: user,
+				sidebar: {
+					active: 'profile'
+				},
+				msg: msg
+			});
+
+		})()
+		
+	}
+
+	// Trả về JSON
+	async(() => {
+		let user = await(PROMISES.getUser(req.session.userId)).userNormal;
 		delete user.password;
 		delete user.__v;
 		delete user._id;
 		delete user.forgot_password;
-		async(() => {
-			let userRoles = await(PROMISES.getUserRoles(req.session.userId));
-			if (userRoles.indexOf('admin') >= 0){
-				user.level = 'Admin'
-			}
-			else if (userRoles.indexOf('manager') >= 0){
-				user.level = 'Chủ nhiệm đề tài'
-			}
-			else {
-				user.level = ''
+		var roles = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/roles.json')).toString());
+		var cores = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/acl-core.json')).toString())
+		var aclRules = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/acl.json')).toString());
+		let sides = {};
+		let template = {
+			view: false,
+			create: false,
+			edit: false,
+			delete: false,
+			approve: false
+		}
+		for(let resourceId in cores.resources){
+			sides[resourceId] = JSON.parse(JSON.stringify(template));
+		}
+		if (aclRules.hasOwnProperty(req.user.id)){
+
+			// Nếu đã cấp quyền
+			
+			var data = aclRules[req.user.id];
+			for(var i = 0; i < data.roles.length; i++){
+				var allows = roles[data.roles[i]].allows;
+				for(var j = 0; j < allows.length; j++){
+					if (allows[j].hasOwnProperty('actions') && allows[j].hasOwnProperty('resourceId')){
+						let resourceId = allows[j].resourceId;
+						if (resourceId && (resourceId in cores.resources)){
+							if (resourceId in sides){
+								for(let a of allows[j].actions){
+									sides[resourceId][a] = true;
+								}
+							}
+							
+							if (['admin', 'manager'].indexOf(user.level) >= 0){
+								sides[resourceId].approve = true;
+							}
+						}
+					}
+				}
 			}
 			return res.json({
 				status: 'success',
 				user: user,
-				data: sides
+				restrict: sides
 			})
-		})()
-		
-	}
-	else {
-		let user = JSON.parse(JSON.stringify(req.user));
-		delete user.password;
-		delete user.level;
-		delete user.__v;
-		delete user._id;
-		delete user.forgot_password;
-		return res.json({
-			status: 'success',
-			user: user,
-			data: []
-		})
-	}
+		}
+		else {
+			
+			// Nếu chưa được cấp quyền gì
+
+			return res.json({
+				status: 'success',
+				user: user,
+				restrict: sides
+			})
+		}
+	})()
+})
+
+router.post('/me', isLoggedIn, upload.single('inputAvatar'), (req, res, next) => {
+	async(() => {
+		let user = await(PROMISES.getUser(req.session.userId));
+		if (user){
+			user = user.userMongoose;
+			user.fullname = req.body.inputFullName;
+			if (req.body.inputPassword && req.body.inputRepeat && (req.body.inputPassword == req.body.inputRepeat)){
+				user.password = user.hashPassword(req.body.inputPassword);
+			}
+			if (req.file){
+				if (user.avatar && user.avatar.original){
+					try {
+						fs.unlinkSync('public/' + user.avatar.original);
+					}
+					catch (e){
+						console.log(e);
+					}
+				}
+				user.avatar.original = req.file.destination.substring('public/'.length) + '/' + req.file.filename;
+			}
+			user.save((err) => {
+				if (err){
+					console.log(err);
+				}
+				else {
+					req.flash('user-msg', 'Cập nhật thành công');
+				}
+				
+				return res.redirect('/users/me')
+			})
+		}
+		else {
+			return res.redirect('/users/me')
+		}
+	})()
 })
 
 router.get('/edit', isLoggedIn, function(req, res, next) {

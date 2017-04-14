@@ -17,6 +17,16 @@ let transporter = nodemailer.createTransport(mailconfig);
 // var PERM_MANAGER = global.myCustomVars.PERM_MANAGER;
 // var PERM_USER = global.myCustomVars.PERM_USER;
 
+router.use((req, res, next) => {
+	// if (req.path == '/logout'){
+	// 	return next();
+	// }
+	// if (req.isAuthenticated()){
+	// 	return res.redirect('/home')
+	// }
+	next();
+})
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.redirect('/auth/login');
@@ -48,12 +58,18 @@ router.get("/login", function (req, res) {
 				});
 			}
 			else {
+				// console.log(req.cookies.avatar);
+				let avatar = '/admin/dist/img/user1-128x128.jpg';
+				if (('avatar' in user) && ('original' in user.avatar) && (user.avatar.original)){
+					avatar = '/' + user.avatar.original;
+				}
 				res.render("lockscreen", {
 					message: req.flash("loginMessage"), 
 					title: "Login", 
 					oldUser: user,
 					path: '/auth/login',
 					oldEmail: req.flash("oldEmail"),
+					avatar: avatar,
 					redirectBack: req.flash('redirectBack')
 				});
 			}
@@ -82,8 +98,7 @@ router.get("/login", function (req, res) {
 // });
 
 router.post("/login", function (req, res, next) {
-	var redirectBack = (req.body.redirectBack) ? req.body.redirectBack : '/home';
-	res.cookie('username', req.body.email, {maxAge: 90000, httpOnly: true});
+	var redirectBack = (req.body.redirectBack) ? req.body.redirectBack : '/users/me';
 	passport.authenticate('local-login', {
 		successRedirect: redirectBack,
 		failureRedirect: "login",
@@ -240,25 +255,6 @@ router.post("/signup", passport.authenticate('local-signup', {
 	failureRedirect: 'signup',
 	failureFlash: true
 }));
-
-router.get('/settings', isLoggedIn, function (req, res, next) {
-	res.render('settings', {title: 'Settings', user: req.user});
-})
-
-router.post('/settings', isLoggedIn, function (req, res, next) {
-	User.findById(req.user, function (err, user) {
-		if (err || !user){
-			console.log(err);
-			return res.redirecr('/book/mybooks');
-		}
-		user.fullname = req.body.fullname;
-		user.city = req.body.city;
-		user.state = req.body.state;
-		user.save(function (err) {
-			return res.redirect('/book/mybooks');
-		})
-	})
-})
 
 function isLoggedIn (req, res, next) {
 	if (req.isAuthenticated()){

@@ -22,24 +22,6 @@ var responseError = global.myCustomVars.responseError;
 var responseSuccess = global.myCustomVars.responseSuccess;
 //  responseSuccess (res, props, values)
 
-var LEVEL = {};
-LEVEL['admin'] = {
-	name: 'Admin',
-	class: 'label label-danger'
-}
-LEVEL['manager'] = {
-	name: 'Manager',
-	class: 'label label-success'
-}
-LEVEL['user'] = {
-	name: 'Normal User',
-	class: 'label label-primary'
-}
-LEVEL['pending-user'] = {
-	name: 'Pending User',
-	class: 'label label-warning'
-}
-
 // console.log(LEVEL)
 
 /* GET home page. */
@@ -71,7 +53,10 @@ router.get('/users', function (req, res, next) {
 
 		for(let i = 0; i < users.length; i++){
 			let u = users[i];
-			u.level = LEVEL[u.level];
+			if (u.id == req.session.userId){
+				console.log('my level: ' + u.level);
+				user.level = u.level;
+			}
 		}
 		result.users = users;
 		result.sidebar = {
@@ -500,7 +485,10 @@ router.post('/fire', aclMiddleware('/admin', 'edit'), function (req, res, next) 
 						return responseError(req, '', res, 500, ['error'], ['Error while saving user info'])
 					}
 					else {
-						return responseSuccess(res, [], []);
+						let data_ = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/acl.json')));
+						delete data_[user.id];
+						fs.writeFileSync(path.join(__dirname, '../config/acl.json'), JSON.stringify(data_, null, 4));
+						return restart(res)
 					}
 				})
 			}
@@ -571,6 +559,7 @@ router.get('/statistic', (req, res, next) => {
 		}
 		let countMaDeTai = {}
 		// console.log(users);
+		let user = req.user;
 		for(let user of users){
 			if (user.maDeTai){
 				console.log('checking ' + user.username);
@@ -591,9 +580,12 @@ router.get('/statistic', (req, res, next) => {
 				}
 			}
 		}
-		for(let user of users){
-			delete user.password;
-			countLevel[user.level]++;
+		for(let u of users){
+			if (u.id == req.session.userId){
+				user.level = u.level;
+			}
+			delete u.password;
+			countLevel[u.level]++;
 		}
 		// return res.json({
 		// 	countMaDeTai: countMaDeTai,
@@ -602,7 +594,7 @@ router.get('/statistic', (req, res, next) => {
 		return res.render('admin/users-statistic', {
 			countLevel: countLevel,
 			countMaDeTai: countMaDeTai,
-			user: req.user,
+			user: user,
 			sidebar: {
 				active: 'statistic-user'
 			}
