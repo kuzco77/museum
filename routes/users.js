@@ -2,14 +2,20 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var path = require('path');
-var users = require('mongoose').
+var users = require('mongoose')	
+
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+const nodemailer = require('nodemailer');
+
+var PROMISES = global.myCustomVars.promises;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  return res.redirect('me');
 });
 
-router.get('/roles', isLoggedIn, function (req, res, next) {
+router.get('/me', isLoggedIn, function (req, res, next) {
 	var roles = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/roles.json')).toString());
 	var cores = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/acl-core.json')).toString())
 	var aclRules = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/acl.json')).toString());
@@ -24,21 +30,55 @@ router.get('/roles', isLoggedIn, function (req, res, next) {
 				}
 			}
 		}
-		return res.json({
-			status: 'success',
-			data: sides
-		})
+		let user = JSON.parse(JSON.stringify(req.user));
+		delete user.password;
+		delete user.__v;
+		delete user._id;
+		delete user.forgot_password;
+		async(() => {
+			let userRoles = await(PROMISES.getUserRoles(req.session.userId));
+			if (userRoles.indexOf('admin') >= 0){
+				user.level = 'Admin'
+			}
+			else if (userRoles.indexOf('manager') >= 0){
+				user.level = 'Chủ nhiệm đề tài'
+			}
+			else {
+				user.level = ''
+			}
+			return res.json({
+				status: 'success',
+				user: user,
+				data: sides
+			})
+		})()
+		
 	}
 	else {
+		let user = JSON.parse(JSON.stringify(req.user));
+		delete user.password;
+		delete user.level;
+		delete user.__v;
+		delete user._id;
+		delete user.forgot_password;
 		return res.json({
-			status: 'error',
-			error: 'Invalid user id'
+			status: 'success',
+			user: user,
+			data: []
 		})
 	}
 })
 
-router.get('/edit-info', isLoggedIn, function(req, res, next) {
-	var roles = JSON.parse
+router.get('/edit', isLoggedIn, function(req, res, next) {
+	let user = JSON.parse(JSON.stringify(req.user));
+		res.render('edit', {
+		userpass: req.user.userpass,
+
+	})
+})
+
+router.post('/editpost', isLoggedIn, function(req, res, next) {
+	let transporter = nodemailer.crea
 })
 
 function isLoggedIn (req, res, next) {

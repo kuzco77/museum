@@ -7,5 +7,16 @@ module.exports = {
 	},
 	environment: {
 		env: 'development'
+	},
+	mailconfig : {
+		service: 'gmail',
+	    auth: {
+	        user: '',
+	        pass: ''
+	    }
+	},
+	recaptcha : {
+		sitekey : '',
+		secretkey: ''
 	}
 }

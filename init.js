@@ -46,16 +46,6 @@ var STR_SEPERATOR = '_+_';
 global.myCustomVars.STR_SEPERATOR = STR_SEPERATOR;
 var STR_AUTOCOMPLETION_SEPERATOR = '_-_'; // Phải đồng bộ với biến cùng tên trong file app/service.js
 global.myCustomVars.STR_AUTOCOMPLETION_SEPERATOR = STR_AUTOCOMPLETION_SEPERATOR;
-// var PERM_MANAGER = 500;
-// global.myCustomVars.PERM_MANAGER = PERM_MANAGER;
-// var PERM_ADMIN = 1000;
-// global.myCustomVars.PERM_ADMIN = PERM_ADMIN;
-// var PERM_USER = 0;
-// global.myCustomVars.PERM_USER = PERM_USER;
-// var PERM_ACCESS_SAME_MUSEUM = global.myCustomVars.PERM_ADMIN;
-// global.myCustomVars.PERM_ACCESS_SAME_MUSEUM = PERM_ACCESS_SAME_MUSEUM;
-// var PERM_ACCESS_ALL = global.myCustomVars.PERM_ADMIN;
-// global.myCustomVars.PERM_ACCESS_ALL = PERM_ACCESS_ALL;
 
 
 
@@ -187,8 +177,8 @@ function responseSuccess (res, props, values) {
 
 global.myCustomVars.responseSuccess = responseSuccess;
 
-
-function rename (curFiles, schemaField, position, mongoId) {
+// rename(req.files[element.name], objectChild(objectInstance, element.schemaProp)[element.name], _UPLOAD_DEST_ANIMAL, result.id);
+function rename (curFiles, schemaFieldName, schemaField, position, mongoId) {
 	// console.log(schemaField);
 	try {
 		schemaField.splice(0, schemaField.length); // delete all old elements
@@ -201,10 +191,20 @@ function rename (curFiles, schemaField, position, mongoId) {
 		var file = curFiles[i];
 		try {
 			var curPath = path.join(position, file.filename);
-			var newFileName = mongoId + STR_SEPERATOR + file.originalname;
+			// while (file.originalname.indexOf('.') != file.originalname.lastIndexOf('.')){
+			// 	file.originalname = file.originalname.replace('.', '');
+			// }
+			
+			// Xóa bỏ 2 hoặc nhiều dấu chấm liền nhau. Đề phòng lỗi khi nó cố tình download file ngoài thư mục public
+			while (file.originalname.indexOf('..') >= 0){
+				file.originalname = file.originalname.replace('..', '.');
+			}
+
+			var newFileName = mongoId + STR_SEPERATOR + schemaFieldName + STR_SEPERATOR + file.originalname;
+			// var newFileName = mongoId + STR_SEPERATOR + file.originalname;
 			var newPath = path.join(position, newFileName);
 			fs.renameSync(curPath, newPath);
-			schemaField.push(mongoId + STR_SEPERATOR + file.originalname);
+			schemaField.push(newFileName);
 		}
 		catch (e){
 			console.log(e);
@@ -365,13 +365,19 @@ function createSaveOrUpdateFunction (variablesBundle) {
 			},
 			{
 				fieldName: 'xa'
+			},
+			{
+				fieldName: 'gioiTinh'
 			}
 		]
 
 		for(let field of specialFields.placeFields){
+			// console.log('checking ' + field.fieldName);
 			if (field.fieldName in req.body){
 				let value_ = req.body[field.fieldName]
+				// console.log(value_);
 				if ((value_.indexOf('undefined') >= 0) || (value_.indexOf('string') >= 0) || (value_.indexOf('?') >= 0)){
+					// console.log('delete now: ' + field.fieldName);
 					req.body[field.fieldName] = ''
 				}
 			}
@@ -723,7 +729,8 @@ function createSaveOrUpdateFunction (variablesBundle) {
 
 					}
 					objectChild(objectInstance, element.schemaProp)[element.name] = [];
-					rename(req.files[element.name], objectChild(objectInstance, element.schemaProp)[element.name], _UPLOAD_DEST_ANIMAL, result.id);
+					rename(req.files[element.name], element.name, objectChild(objectInstance, element.schemaProp)[element.name], _UPLOAD_DEST_ANIMAL, result.id);
+					// rename(req.files[element.name], objectChild(objectInstance, element.schemaProp)[element.name], _UPLOAD_DEST_ANIMAL, result.id);
 				}
 			})
 
@@ -816,7 +823,25 @@ function exportFile (objectInstance, PROP_FIELDS, ObjectModel, LABEL, res, parag
 			}
 		}
 
-		delete objectInstance.flag.fDiaDiemThuMau; // TODO: Don'y know why, check later
+		try {
+			// Quốc gia khác, không phải Việt Nam
+			let qg = objectInstances.duLieuThuMau.diaDiemThuMau.quocGia;
+			if ((qg) && (qg.trim()) && (qg.trim() != 'Việt Nam')){
+				for(var i = 0; i < PROP_FIELDS.length; i++){
+					var field = PROP_FIELDS[i];
+					if (['tinh', 'huyen', 'xa'].indexOf(field.name) >= 0){
+						field.required = false;
+						field.money = false;
+						// console.log(field.name);
+					}
+				}
+			}
+		}
+		catch (e){
+			console.log(e);
+		}
+
+		delete objectInstance.flag.fDiaDiemThuMau; // TODO: Don't know why, check later
 		for(var i = 0; i < PROP_FIELDS.length; i++){
 			var field = PROP_FIELDS[i];
 			// console.log(field.name);
@@ -1586,6 +1611,24 @@ function exportXLSX (objectInstance, PROP_FIELDS, ObjectModel, LABEL, res, parag
 					// console.log(field.name);
 				}
 			}
+		}
+
+		try {
+			// Quốc gia khác, không phải Việt Nam
+			let qg = objectInstances.duLieuThuMau.diaDiemThuMau.quocGia;
+			if ((qg) && (qg.trim()) && (qg.trim() != 'Việt Nam')){
+				for(var i = 0; i < PROP_FIELDS.length; i++){
+					var field = PROP_FIELDS[i];
+					if (['tinh', 'huyen', 'xa'].indexOf(field.name) >= 0){
+						field.required = false;
+						field.money = false;
+						// console.log(field.name);
+					}
+				}
+			}
+		}
+		catch (e){
+			console.log(e);
 		}
 
 		delete objectInstance.flag.fDiaDiemThuMau;
@@ -2443,10 +2486,16 @@ var getSingleHandler = function (options) {
 							let tmp = flatObjectModel(PROP_FIELDS, objectInstance);
 							try {
 								for(p in tmp){
-									if (tmp[p] instanceof Array){
+									if (tmp[p] instanceof Array){ // Chỉ có những trường file đính kèm thì mới là Array
 										let files = tmp[p];
 										files.map((f, i) => {
-											files[i] = f.substring(f.lastIndexOf(STR_SEPERATOR) + STR_SEPERATOR.length);
+											let url = '/uploads/' + objectModelName + '/' + f;
+											let obj = {
+												fileName: f.substring(f.lastIndexOf(STR_SEPERATOR) + STR_SEPERATOR.length),
+												urlDirect: url,
+												urlDownload: '/content/download' + url
+											}
+											files[i] = obj;
 										})
 									}
 								}
@@ -2754,11 +2803,30 @@ global.myCustomVars.restart = restart;
 
 global.myCustomVars.promises = {}
 
+var getSharedData = () => {
+	return new Promise((resolve, reject) => {
+		mongoose.model('SharedData').findOne({}, (err, sharedData) => {
+			if (!err && sharedData){
+				resolve(sharedData);
+			}
+			else {
+				resolve(null)
+			}
+		})
+	});
+}
+
+global.myCustomVars.promises.getSharedData = getSharedData;
+
 var getMaDeTai = () => {
 	return new Promise((resolve, reject) => {
 		mongoose.model('SharedData').findOne({}, (err, sharedData) => {
 			if (!err && sharedData){
-				resolve(sharedData.maDeTai);
+				let result = [];
+				for(let dt of sharedData.deTai){
+					result.push(dt.maDeTai);
+				}
+				resolve(result);
 			}
 			else {
 				resolve([])
@@ -2769,9 +2837,16 @@ var getMaDeTai = () => {
 
 global.myCustomVars.promises.getMaDeTai = getMaDeTai;
 
-var addMaDeTai = (maDeTai) => {
+var addMaDeTai = (maDeTai, tenDeTai, donViChuTri) => {
 	return new Promise((resolve, reject) => {
 		async(() => {
+			maDeTai = maDeTai.trim();
+			if (!maDeTai){
+				resolve({
+					status: 'error',
+					error: 'Mã đề tài không hợp lệ'
+				})
+			}
 			let maDeTais = await(getMaDeTai());
 			if (maDeTais.indexOf(maDeTai) >= 0){
 				resolve({
@@ -2788,7 +2863,11 @@ var addMaDeTai = (maDeTai) => {
 							error: 'Có lỗi xảy ra. Vui lòng thử lại'
 						})
 					}
-					sharedData.maDeTai.push(maDeTai);
+					sharedData.deTai.push({
+						maDeTai: maDeTai,
+						tenDeTai: tenDeTai,
+						donViChuTri: donViChuTri
+					});
 					sharedData.save((err) => {
 						if (err){
 							console.log(err);
@@ -2842,3 +2921,86 @@ var getUser = (userId) => {
 }
 
 global.myCustomVars.promises.getUser = getUser;
+
+var getUsers = () => {
+	return new Promise((resolve, reject) => {
+		mongoose.model('User').find({}, (err, users) => {
+			if (err || !users){
+				console.log(err);
+				resolve({usersMongoose: [], usersNormal: []});
+			}
+			else{
+				async(() => {
+					let users_ = JSON.parse(JSON.stringify(users));
+					for(let i = 0; i < users_.length; i++){
+						var u = users_[i];
+						var userRoles = await(new Promise((resolve_, reject_) => {
+							acl.userRoles(u._id, (err, roles) => {
+								// console.log('promised userRoles called');
+								if (err){
+									console.log(err);
+									resolve_([])
+								}
+								else {
+									resolve_(roles)
+								}
+							})
+						}))
+						// console.log('userRoles done');
+						// console.log(userRoles);
+						if (userRoles.indexOf('admin') >= 0){
+							// console.log('admin ' + u._id);
+							u.level = 'admin';
+						}
+						else if (userRoles.indexOf('manager') >= 0){
+							// console.log('manage ' + u._id);
+							u.level = 'manager';
+						}
+						else {
+							// console.log('user ' + u._id);
+							u.level = 'user'
+							if (!u.maDeTai){
+								// console.log('pending user ' + u._id);
+								u.level = 'pending-user';
+							}
+						}
+					}
+					// console.log('this');
+					// console.log(users);
+					resolve({
+						usersMongoose: users, // Có Schema, không thể thêm hay bớt property
+						usersNormal: users_   // Object JS thường, có thể thêm bớt thuộc tính
+					});
+				})()
+				
+			}
+		})
+	})
+}
+
+global.myCustomVars.promises.getUsers = getUsers;
+
+var userHasRole = (userId, role) => {
+	return new Promise((resolve, reject) => {
+		mongoose.model('User').findById(userId, (err, user) => {
+			if (err || !user){
+				resolve(false)
+			}
+			else {
+				acl.userRoles(userId, (err, roles) => {
+					if (err){
+						return resolve(false);
+					}
+					else if (roles.indexOf(role) >= 0){
+						resolve(true);
+					}
+					else {
+						resolve(false)
+					}
+				})
+			}
+		})
+	})
+}
+
+global.myCustomVars.promises.userHasRole = userHasRole;
