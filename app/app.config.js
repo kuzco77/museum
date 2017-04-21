@@ -178,6 +178,11 @@ app.config(function($locationProvider, $stateProvider, $urlRouterProvider) {
 	.state('testover', {
 		url: '/bai-dang/test-over',
 		templateUrl: 'views/testover.template.html'
+	})
+	.state('guest-view-tho-nhuong', {
+		url:'/guest/tho-nhuong',
+		templateUrl: 'views/guest/guest-tho-nhuong.html',
+		controller: "GuestLandController"
 	});
 	$urlRouterProvider.otherwise('/');
 });
@@ -209,4 +214,4 @@ app.run(function($rootScope, $location, $state, $stateParams, $http, AuthService
 		// }
 	});
 });
->>>>>>> 87085feb920dd354dcdcd47a1ee9e423d9f363fa
+

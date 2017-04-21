@@ -2,14 +2,10 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var path = require('path');
-<<<<<<< HEAD
-var users = require('mongoose')	
-=======
 var mongoose = require('mongoose');
 var multer               = require('multer');
 var UPLOAD_DESTINATION   = 'public/uploads/user/avatar';
 var upload               = multer({dest: UPLOAD_DESTINATION});
->>>>>>> 87085feb920dd354dcdcd47a1ee9e423d9f363fa
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');

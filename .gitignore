@@ -5,9 +5,9 @@ config/roles.json
 public/uploads
 app/service.js
 *.log
-<<<<<<< HEAD
 *.DS_Store
-=======
 *.sublime-workspace
 *.sublime-project
->>>>>>> c575951a8a09949f4716208b984f56a9baef39c0
+deploygit.bat
+
+

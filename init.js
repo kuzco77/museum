@@ -812,7 +812,7 @@ function exportFile (objectInstance, PROP_FIELDS, ObjectModel, LABEL, res, parag
 
 		// DiaDiemThuMau
 
-		if (objectInstance.flag.fDiaDiemThuMau != 'dat-lien'){
+		if (objectInstance.flag.fDiaDiemThuMau == 'bien'){
 			for(var i = 0; i < PROP_FIELDS.length; i++){
 				var field = PROP_FIELDS[i];
 				if (['tinh', 'huyen', 'xa'].indexOf(field.name) >= 0){
@@ -1602,7 +1602,7 @@ function exportXLSX (objectInstance, PROP_FIELDS, ObjectModel, LABEL, res, parag
 
 		// DiaDiemThuMau
 
-		if (objectInstance.flag.fDiaDiemThuMau != 'dat-lien'){
+		if (objectInstance.flag.fDiaDiemThuMau == 'bien'){
 			for(var i = 0; i < PROP_FIELDS.length; i++){
 				var field = PROP_FIELDS[i];
 				if (['tinh', 'huyen', 'xa'].indexOf(field.name) >= 0){
@@ -2905,6 +2905,27 @@ var getUserRoles = (userId) => {
 }
 
 global.myCustomVars.promises.getUserRoles = getUserRoles;
+
+var removeUserRoles = (userId, roles) => {
+	return new Promise((resolve, reject) => {
+		acl.removeUserRoles(userId, roles, (err) => {
+			if (err){
+				console.log(err);
+				resolve({
+					status: 'error',
+					error: err
+				})
+			}
+			else {
+				resolve({
+					status: 'success'
+				})
+			}
+		})
+	})
+}
+
+global.myCustomVars.promises.removeUserRoles = removeUserRoles;
 
 var getUser = (userId) => {
 	return new Promise((resolve, reject) => {

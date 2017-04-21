@@ -1,0 +1,69 @@
+<!-- {{name}}
+{{soils}} -->
+
+<link rel="stylesheet" type="text/css" href="guest-tho-nhuong.css">
+
+
+
+<div class="wrapper">
+	
+<div class="dropdown cachdong">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+	Dropdown
+	<span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu khongmauxanh" aria-labelledby="dropdownMenu1">
+	<li><a href="#">Action</a></li>
+	<li><a href="#">Another action</a></li>
+	<li><a href="#">Something else here</a></li>
+	<li role="separator" class="divider"></li>
+	<li><a href="#">Separated link</a></li>
+  </ul>
+</div>
+
+	<div class="_table-header">
+		<div class="_table-no _table-item">STT</div>
+		<div class="_table-desc _table-item">Mô tả mẫu vật</div>
+		<div class="_table-image _table-item">Ảnh</div>
+		<div class="_table-note _table-item cachle">Thêm</div>
+	</div>
+	<div class="_table-content" ng-repeat="(key, post) in soils">
+		<div class="_table-no _table-item">{{$index +1}}</div>
+		<div class="_table-desc _table-item">
+			<p><strong>Số hiệu BTTNVN:</strong> {{post.soHieuBTTNVN}}</p>
+			<p>{{post.tenVietNam}}</p>
+			<p>{{post.thoiGianThuMau}}</p>
+			<p>{{post.nguoiThuMau}}</p>
+		</div>
+		<div class="_table-image _table-item"><img src="/uploads/soil/{{post.anhMauVat[0]}}" height="100px"></div>
+		<div class="_table-note _table-item"><a href="#">Note</a></div>
+	</div>
+
+	
+
+<!--    <table class="table table-hover">
+		<thead>
+			<tr>
+				<th>STT</th>
+				<th>Mô tả mẫu vật</th>
+				<th>Ảnh</th>
+				<th>Thêm</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat = "(key, post) in soils">
+				<td>{{$index +1}}</td>
+				<td>
+					<p><b>Số hiệu BTTNVN:</b> {{post.soHieuBTTNVN}}</p>
+					<p>{{post.tenVietNam}}</p>
+					<p>{{post.thoiGianThuMau}}</p>
+					<p>{{post.nguoiThuMau}}</p>
+				</td>
+				<td><img src="/uploads/soil/{{post.anhMauVat[0]}}" height="100px"></td>
+				<td><a href=""></a></td>
+			</tr>
+	
+		</tbody>
+	</table> -->
+</div>
+

@@ -1,0 +1,52 @@
+.wrapper {
+		width: 960px;
+		margin: auto;
+	}
+
+	._table-header {
+		display: flex;
+		width: 100%;
+		padding: 5px 0px;
+		border-bottom: 2px solid #ddd;
+		font-weight: bold;
+
+	}
+
+	._table-content {
+		display: flex;
+		width: 100%;
+	}
+
+	._table-content ._table-item {
+		padding: 10px 0;
+		border-bottom: 1px solid #ddd;
+	}
+
+	._table-no {
+		flex: 0 0 40px;
+	}
+
+	._table-desc {
+		flex: 1 0 350px;
+	}
+
+	._table-image {
+		flex: 1 0 350px;
+	}
+
+	._table-note {
+		flex: 0 1 auto;
+	}
+
+	.khongmauxanh {
+		background: #fff;
+	}
+
+	.cachdong {
+		float: right;
+		margin-bottom: 10px;
+	}
+
+	.cachle {
+		margin-right: 30px;
+	}
