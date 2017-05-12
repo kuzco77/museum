@@ -5,7 +5,7 @@ app.filter('maDeTaiFilter', function() {
     var result = [];
     angular.forEach(input, function(value, key) {
       if (value == search) {
-        result.push(value)
+        result.push(value);
       }
     });
     return result;

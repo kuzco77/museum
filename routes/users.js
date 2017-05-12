@@ -5,7 +5,7 @@ var path = require('path');
 var mongoose = require('mongoose');
 var multer               = require('multer');
 var UPLOAD_DESTINATION   = 'public/uploads/user/avatar';
-var upload               = multer({dest: UPLOAD_DESTINATION});
+var upload               = multer({dest: UPLOAD_DESTINATION});	
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
